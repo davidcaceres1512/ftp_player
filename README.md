@@ -39,6 +39,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
+    <li><a href="#Project Structure">Project Structure</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#testing">Testing</a></li>
     <li><a href="#deployment on an  SBC">Deployment on an  SBC</a></li>
@@ -127,7 +128,30 @@ This is an example of how to list things you need to use the software and how to
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<!-- PROJECT STRUCTURE -->
+## Project Structure
 
+This project follows an organized structure to clearly separate different components and facilitate maintenance and collaboration. Below is the description of the top-level folders:
+
+- **.gitignore**: File specifying files and directories to be ignored when using git for version control.
+
+- **CMakeLists.txt**: CMake configuration file for building the project.
+
+- **README.md**: This file provides an overview of the project and its structure.
+
+- **app/**: Contains the source code and necessary files for the main application. Here you'll find `CMakeLists.txt` to configure building the main application and `main.cpp` as the main source file.
+
+- **cmake/**: Contains additional CMake configuration files. Includes `FindVLC.cmake`, a CMake configuration file for finding the VLC library.
+
+- **img/**: Folder containing images related to the project, often utilized by `README.md`
+
+- **include/**: Contains the header files of the project. Here you'll find folders like `Client`, `FTPClient`, `UARTCommunication`, and `VLCPlayer`, each with its respective `CMakeLists.txt` file to configure building header files and the header files related to each component.
+
+- **src/**: Contains the source files of the project. Similar to the structure of `include/`, here you'll find folders like `Client`, `FTPClient`, `UARTCommunication`, and `VLCPlayer`, each with its respective `CMakeLists.txt` file to configure building source files and the source files related to each component.
+
+- **tests/**: Contains the project's test files. Similar to the structure of `include/` and `src/`, here you'll find folders like `UARTCommunication`, which contains tests related to UART communication, with subfolders `MockUARTCommunication` and `UnitUARTCommunication`, each with its respective `CMakeLists.txt` file to configure building test files related to UART communication.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -195,7 +219,6 @@ Download all files located in the remote FTP server's folder and display the dow
 #include <vector>
 #include "FTPClient.h"
 
-
 std::string serverIP = "192.168.1.50";
 std::string username = "Fonestar";
 std::string password = "odroid";
@@ -205,10 +228,7 @@ std::string localDirectory = "../Download/";
 int main() {
     // Create an instance of FTPClient
     FTPClient ftpClient(serverIP, username, password, remoteDirectory, localDirectory);
-
-    //Create an instance of UART
-    UARTCommunication uart("/dev/ttySAC0", 115200);
-    
+  
     // Download all MP3 files located in the remote directory
     std::vector<std::string> downloadedFiles = ftpClient.downloadAllMP3Files();
 
@@ -286,7 +306,24 @@ Download all files located in the remote FTP server's folder, play the downloade
 
 <!-- TESTING -->
 ## Testing
-Instructions for running the test suite usando googletest y cmake.
+
+Testing is an essential part of the development process to ensure the correctness and reliability of the codebase. This project includes a comprehensive testing suite organized in a structured manner. Below is an overview of the testing structure:
+
+- **tests/**: Contains the project's test suite, organized for comprehensive testing. It includes:
+  - `CMakeLists.txt`: Configuration for building the test files.
+  - **UARTCommunication/**: Directory for UART communication-related tests, including:
+    - `CMakeLists.txt`: Configuration for building UART communication test files.
+    - **MockUARTCommunication/**: Simulated UART communication files:
+      - `CMakeLists.txt`: Configuration for building simulated UART communication files.
+      - `MockUARTCommunication.cpp`: Source file for simulating UART communication.
+      - `MockUARTCommunication.h`: Header file for simulating UART communication.
+      - `MockUARTCommunicationTest.cpp`: Test file for simulating UART communication.
+    - **UnitUARTCommunication/**: Unit test files for UART communication:
+      - `CMakeLists.txt`: Configuration for building unit test files related to UART communication.
+      - `UnitUARTCommunicationTest.cpp`: Unit test file for UART communication.
+
+In this section, you'll find comprehensive instructions for running the entire test suite or individual tests using Googletest and CMake.
+
 
 > These instructions are valid after completing the installation steps.
 
@@ -339,7 +376,7 @@ From the main **main.cpp** code, be careful when assigning the UART port.
 > UARTCommunication uart("/dev/ttySAC0", 115200);
 > ```
 
-This parameter should be documented in your BSP datasheet. Refer to the following figure for details.
+This parameter should be documented in your SBC datasheet. Refer to the following figure for details.
 
 ![odroid serial img][odroid serial img]
 
